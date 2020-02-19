@@ -1,0 +1,13 @@
+name: ga-slack-notification
+description: You can notify slack of GitHub Actions.
+author: guchaosean
+inputs:
+  status:
+    required: true
+    description: Specify success or failure or cancelled or custom.
+runs:
+  using: node12
+  main: dist/index.js
+branding:
+  icon: bell
+  color: blue
