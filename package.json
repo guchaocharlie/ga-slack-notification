@@ -1,0 +1,59 @@
+{
+  "name": "ga-slack-notification",
+  "version": "1.0.0",
+  "description": "github action slack notification package",
+  "main": "lib/main.js",
+  "scripts": {
+    "build": "tsc",
+    "format": "prettier --write **/*.ts",
+    "format-check": "prettier --check **/*.ts",
+    "lint": "eslint src/**/*.ts",
+    "pack": "ncc build",
+    "test": "jest",
+    "test-for-local": "jest",
+    "all": "npm run build && npm run format && npm run pack && npm test",
+    "release": "npm run build && npm run pack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/guchaocharlie/ga-slack-notification.git"
+  },
+  "keywords": [
+    "slack",
+    "github",
+    "action"
+  ],
+  "author": "guchao",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/guchaocharlie/ga-slack-notification/issues"
+  },
+  "homepage": "https://github.com/guchaocharlie/ga-slack-notification#readme",
+  "dependencies": {
+    "@actions/core": "1.2.0",
+    "@actions/exec": "1.0.2",
+    "@actions/github": "2.0.0",
+    "@actions/io": "1.0.1",
+    "@octokit/rest": "16.15.0",
+    "@actions/tool-cache": "1.1.2",
+    "@slack/webhook": "5.0.2",
+    "semver": "7.1.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^24.0.25",
+    "@types/node": "^13.1.1",
+    "@types/semver": "^6.2.0",
+    "@typescript-eslint/parser": "^2.13.0",
+    "@zeit/ncc": "^0.20.5",
+    "codecov": "^3.6.1",
+    "eslint": "^6.8.0",
+    "eslint-plugin-github": "^3.4.0",
+    "eslint-plugin-jest": "^23.1.1",
+    "jest": "^24.9.0",
+    "jest-circus": "^24.9.0",
+    "js-yaml": "^3.13.1",
+    "prettier": "^1.19.1",
+    "ts-jest": "^24.2.0",
+    "typescript": "^3.7.4"
+  }
+}
