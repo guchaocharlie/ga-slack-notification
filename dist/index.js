@@ -10923,30 +10923,52 @@ class Client {
         }
         this.webhook = new webhook_1.IncomingWebhook(webhookUrl);
     }
+    getData() {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (this.github === undefined) {
+                throw Error('Specify secrets.GITHUB_TOKEN');
+            }
+            const { sha } = github.context;
+            const { owner, repo } = github.context.repo;
+            const commit = yield this.github.repos.getCommit({ owner, repo, sha });
+            const { author } = commit.data.commit;
+            return {
+                commit,
+                sha,
+                owner,
+                repo,
+                author,
+            };
+        });
+    }
+    ;
     success(text) {
         return __awaiter(this, void 0, void 0, function* () {
+            const gitData = yield this.getData();
             const template = yield this.payloadTemplate();
             template.attachments[0].color = 'good';
-            template.text += ':white_check_mark: Succeeded GitHub Actions\n';
+            template.text += `:white_check_mark: Succeeded GitHub Actions by ${gitData.author.name}, good work! \n`;
             template.text += text;
             return template;
         });
     }
     fail(text) {
         return __awaiter(this, void 0, void 0, function* () {
+            const gitData = yield this.getData();
             const template = yield this.payloadTemplate();
             template.attachments[0].color = 'danger';
             template.text += this.mentionText(this.with.only_mention_fail);
-            template.text += ':no_entry: Failed GitHub Actions\n';
+            template.text += `:no_entry: Failed GitHub Actions by ${gitData.author.name}, please fix me!\n `;
             template.text += text;
             return template;
         });
     }
     cancel(text) {
         return __awaiter(this, void 0, void 0, function* () {
+            const gitData = yield this.getData();
             const template = yield this.payloadTemplate();
             template.attachments[0].color = 'warning';
-            template.text += ':warning: Canceled GitHub Actions\n';
+            template.text += `:warning: Canceled GitHub Actions\n by ${gitData.author.name}, please try again! `;
             template.text += text;
             return template;
         });
@@ -10980,28 +11002,14 @@ class Client {
     }
     fields() {
         return __awaiter(this, void 0, void 0, function* () {
-            if (this.github === undefined) {
-                throw Error('Specify secrets.GITHUB_TOKEN');
-            }
-            const { sha } = github.context;
-            const { owner, repo } = github.context.repo;
-            const commit = yield this.github.repos.getCommit({ owner, repo, sha });
-            const { author } = commit.data.commit;
+            const gitData = yield this.getData();
             return [
                 this.repo,
                 {
-                    title: 'message',
-                    value: commit.data.commit.message,
-                    short: true,
-                },
-                this.commit,
-                {
                     title: 'author',
-                    value: `${author.name}<${author.email}>`,
+                    value: gitData.author.name,
                     short: true,
                 },
-                this.action,
-                this.eventName,
                 this.ref,
                 this.workflow,
             ];
@@ -11021,22 +11029,6 @@ class Client {
         return {
             title: 'repo',
             value: `<https://github.com/${owner}/${repo}|${owner}/${repo}>`,
-            short: true,
-        };
-    }
-    get action() {
-        const { sha } = github.context;
-        const { owner, repo } = github.context.repo;
-        return {
-            title: 'action',
-            value: `<https://github.com/${owner}/${repo}/commit/${sha}/checks|action>`,
-            short: true,
-        };
-    }
-    get eventName() {
-        return {
-            title: 'eventName',
-            value: github.context.eventName,
             short: true,
         };
     }

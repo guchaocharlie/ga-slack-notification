@@ -51,7 +51,7 @@ export class Client {
       repo,
       author,
     };
-  };
+  }
 
   async success(text: string) {
     const gitData = await this.getData();
