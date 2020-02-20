@@ -6,6 +6,7 @@ export interface With {
   status: string;
   text: string;
   author_name: string;
+  runId: string;
 }
 
 export class Client {
@@ -106,18 +107,18 @@ export class Client {
         value: gitData.author.name,
         short: true,
       },
-      this.ref,
+      this.run,
       this.workflow,
     ];
   }
 
-  private get commit() {
-    const { sha } = github.context;
+  private get run() {
     const { owner, repo } = github.context.repo;
+    const runId = this.with.runId;
 
     return {
-      title: 'commit',
-      value: `<https://github.com/${owner}/${repo}/commit/${sha}|${sha}>`,
+      title: 'github run',
+      value: `<https://github.com/${owner}/${repo}/actions/runs/${runId}|#${runId}>`,
       short: true,
     };
   }
@@ -131,11 +132,7 @@ export class Client {
       short: true,
     };
   }
-
-  private get ref() {
-    return { title: 'ref', value: github.context.ref, short: true };
-  }
-
+  
   private get workflow() {
     return { title: 'workflow', value: github.context.workflow, short: true };
   }
