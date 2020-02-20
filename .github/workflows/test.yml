@@ -13,8 +13,8 @@ jobs:
         with:
           status: ${{ job.status }}
           author_name: Tests and linting
+          runId: ${{ github.run_id }}
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }} # required
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }} # required
         if: always() # Pick up events even if the job fails or is canceled.
-      - run: printf ${{ job }}

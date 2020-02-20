@@ -7,16 +7,19 @@ async function run(): Promise<void> {
     status = status.toLowerCase();
     const author_name = core.getInput('author_name');
     const text = core.getInput('text');
+    const runId = core.getInput('runId');
 
     core.debug(`status: ${status}`);
     core.debug(`author_name: ${author_name}`);
     core.debug(`text: ${text}`);
+    core.debug(`runId: ${runId}`);
 
     const client = new Client(
       {
         text,
         status,
         author_name,
+        runId,
       },
       process.env.GITHUB_TOKEN,
       process.env.SLACK_WEBHOOK_URL,
