@@ -2,7 +2,7 @@ name: build-test
 on: [pull_request, push]
 
 jobs:
-  test_run:
+  check_pr:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
