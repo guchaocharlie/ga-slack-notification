@@ -84,7 +84,6 @@ export class Client {
   }
 
   private async payloadTemplate() {
-
     return {
       text: this.with.text,
       attachments: [
@@ -132,7 +131,7 @@ export class Client {
       short: true,
     };
   }
-  
+
   private get workflow() {
     return { title: 'workflow', value: github.context.workflow, short: true };
   }
