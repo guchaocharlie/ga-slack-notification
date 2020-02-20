@@ -6,11 +6,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/cache@v1
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
       - run: npm ci
       - run: npm run all
+
+      - uses: guchaocharlie/ga-slack-notification@0.0.3
+        with:
+          status: ${{ job.status }}
+          author_name: Tests and linting
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }} # required
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }} # required
+        if: always() # Pick up events even if the job fails or is canceled.
+      - run: printf ${{ job }}

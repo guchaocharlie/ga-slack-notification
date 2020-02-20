@@ -4,16 +4,9 @@ import { IncomingWebhook, IncomingWebhookSendArguments } from '@slack/webhook';
 
 export interface With {
   status: string;
-  mention: string;
+  text: string;
   author_name: string;
-  only_mention_fail: string;
-  username: string;
-  icon_emoji: string;
-  icon_url: string;
-  channel: string;
 }
-
-const groupMention = ['here', 'channel'];
 
 export class Client {
   private webhook: IncomingWebhook;
@@ -67,7 +60,6 @@ export class Client {
     const gitData = await this.getData();
     const template = await this.payloadTemplate();
     template.attachments[0].color = 'danger';
-    template.text += this.mentionText(this.with.only_mention_fail);
     template.text += `:no_entry: Failed GitHub Actions by ${gitData.author.name}, please fix me!\n `;
     template.text += text;
 
@@ -91,15 +83,9 @@ export class Client {
   }
 
   private async payloadTemplate() {
-    const text = this.mentionText(this.with.mention);
-    const { username, icon_emoji, icon_url, channel } = this.with;
 
     return {
-      text,
-      username,
-      icon_emoji,
-      icon_url,
-      channel,
+      text: this.with.text,
       attachments: [
         {
           color: '',
@@ -152,19 +138,5 @@ export class Client {
 
   private get workflow() {
     return { title: 'workflow', value: github.context.workflow, short: true };
-  }
-
-  private mentionText(mention: string) {
-    const normalized = mention.replace(/ /g, '');
-    if (groupMention.includes(normalized)) {
-      return `<!${normalized}> `;
-    } else if (normalized !== '') {
-      const text = normalized
-        .split(',')
-        .map(userId => `<@${userId}>`)
-        .join(' ');
-      return `${text} `;
-    }
-    return '';
   }
 }
